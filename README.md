@@ -8,6 +8,7 @@ MongoDB should be running locally first.
 cd server
 npm install
 copy .env.example .env
+npm run seed
 npm run start:dev
 ```
 
