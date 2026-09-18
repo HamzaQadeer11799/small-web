@@ -3,10 +3,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { PeopleModule } from './people/people.module.js';
 import { Person, PersonSchema } from './people/person.schema.js';
 import { Site, SiteSchema } from './sites/site.schema.js';
 import { SitesModule } from './sites/sites.module.js';
 import { Visit, VisitSchema } from './visits/visit.schema.js';
+import { VisitsModule } from './visits/visits.module.js';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { Visit, VisitSchema } from './visits/visit.schema.js';
       { name: Visit.name, schema: VisitSchema },
     ]),
     SitesModule,
+    PeopleModule,
+    VisitsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

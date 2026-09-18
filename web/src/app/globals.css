@@ -23,8 +23,15 @@ body {
   box-sizing: border-box;
 }
 
-.browser {
+.shell {
   min-height: 100%;
+  display: flex;
+  align-items: stretch;
+}
+
+.browser {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
 }
@@ -36,6 +43,77 @@ body {
   padding: 12px 16px;
   border-bottom: 1px solid var(--line);
   background: var(--card);
+  flex-wrap: wrap;
+}
+
+.person,
+.nav {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+}
+
+.nav:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.history {
+  width: 280px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--line);
+  background: var(--card);
+  padding: 16px;
+  overflow: auto;
+}
+
+.history h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.history-note,
+.history-empty,
+.history-meta {
+  color: var(--ink-soft);
+  font-size: 12px;
+}
+
+.history-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.history-item {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 8px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+}
+
+.history-address {
+  display: block;
+  font-size: 14px;
+}
+
+@media (max-width: 800px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .history {
+    width: auto;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    max-height: 240px;
+  }
 }
 
 .address-label {
@@ -97,8 +175,5 @@ body {
   min-height: 70vh;
   border: 0;
   background: white;
-}
-
-.frame {
   padding: 0 8px;
 }
