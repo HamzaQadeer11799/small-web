@@ -5,6 +5,7 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { Person, PersonSchema } from './people/person.schema.js';
 import { Site, SiteSchema } from './sites/site.schema.js';
+import { SitesModule } from './sites/sites.module.js';
 import { Visit, VisitSchema } from './visits/visit.schema.js';
 
 @Module({
@@ -23,6 +24,7 @@ import { Visit, VisitSchema } from './visits/visit.schema.js';
       { name: Site.name, schema: SiteSchema },
       { name: Visit.name, schema: VisitSchema },
     ]),
+    SitesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

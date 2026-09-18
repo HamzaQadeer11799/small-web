@@ -1,3 +1,5 @@
+import { Browser } from '@/components/browser';
+
 export default function Home() {
-  return <main>Small Web</main>;
+  return <Browser />;
 }
