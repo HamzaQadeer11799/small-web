@@ -27,6 +27,11 @@ export type HistoryRow = {
   via: VisitWay;
 };
 
+export type SearchHit = {
+  address: string;
+  title: string;
+};
+
 export function normalizeAddress(value: string): string {
   return value.trim().toLowerCase();
 }
@@ -48,6 +53,16 @@ export async function fetchSite(
 
   const page = (await response.json()) as SitePage;
   return { page, missing: false };
+}
+
+export async function fetchSearch(q: string): Promise<SearchHit[]> {
+  const response = await fetch(
+    `${API_URL}/sites?q=${encodeURIComponent(q)}`,
+  );
+  if (!response.ok) {
+    throw new Error('Could not search');
+  }
+  return (await response.json()) as SearchHit[];
 }
 
 export async function fetchPeople(): Promise<PersonRow[]> {

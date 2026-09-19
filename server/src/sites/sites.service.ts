@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Person } from '../people/person.schema.js';
@@ -10,6 +10,15 @@ export type SitePage = {
   body: string;
   authorName: string;
 };
+
+export type SearchHit = {
+  address: string;
+  title: string;
+};
+
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 @Injectable()
 export class SitesService {
@@ -40,5 +49,24 @@ export class SitesService {
       body: site.body,
       authorName,
     };
+  }
+
+  async search(raw: string): Promise<SearchHit[]> {
+    const q = raw.trim();
+    if (!q) {
+      throw new BadRequestException('Search text is required');
+    }
+
+    const pattern = new RegExp(escapeRegex(q), 'i');
+    const rows = await this.sites
+      .find({ $or: [{ title: pattern }, { body: pattern }] })
+      .sort({ address: 1 })
+      .lean()
+      .exec();
+
+    return rows.map((row) => ({
+      address: row.address,
+      title: row.title,
+    }));
   }
 }

@@ -46,6 +46,15 @@ body {
   flex-wrap: wrap;
 }
 
+.chrome-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
 .person,
 .nav {
   padding: 8px 10px;
@@ -121,13 +130,18 @@ body {
   color: var(--ink-soft);
 }
 
-.address {
+.address,
+.search {
   flex: 1;
   min-width: 0;
   padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
   font-size: 15px;
+}
+
+.search {
+  max-width: 220px;
 }
 
 .go {
@@ -149,8 +163,30 @@ body {
 
 .status,
 .byline,
-.missing {
+.missing,
+.results {
   padding: 24px 16px;
+}
+
+.results h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.results p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.results-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  max-width: 480px;
+}
+
+.results .status {
+  padding: 16px 0 0;
 }
 
 .status,
