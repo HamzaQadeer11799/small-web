@@ -6,6 +6,7 @@ import {
   fetchPeople,
   fetchSearch,
   fetchSite,
+  publishSite,
   HistoryRow,
   normalizeAddress,
   PersonRow,
@@ -34,6 +35,8 @@ export function Browser() {
   const [personId, setPersonId] = useState('');
   const [typed, setTyped] = useState('');
   const [query, setQuery] = useState('');
+  const [draftAddress, setDraftAddress] = useState('');
+  const [draftHtml, setDraftHtml] = useState('');
   const [shown, setShown] = useState<Shown>({ kind: 'idle' });
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [index, setIndex] = useState(-1);
@@ -160,6 +163,8 @@ export function Browser() {
     setIndex(-1);
     setTyped('');
     setQuery('');
+    setDraftAddress('');
+    setDraftHtml('');
     setShown({ kind: 'idle' });
     try {
       setHistory(await fetchHistory(id));
@@ -186,6 +191,26 @@ export function Browser() {
       setShown({
         kind: 'error',
         message: error instanceof Error ? error.message : 'Could not search',
+      });
+    }
+  }
+
+  async function onPublish(event: FormEvent) {
+    event.preventDefault();
+    const address = normalizeAddress(draftAddress);
+    const id = personIdRef.current;
+    if (!address || !draftHtml.trim() || !id) {
+      return;
+    }
+    try {
+      await publishSite({ personId: id, address, body: draftHtml });
+      setDraftAddress('');
+      setDraftHtml('');
+      await go(address, 'typed');
+    } catch (error) {
+      setShown({
+        kind: 'error',
+        message: error instanceof Error ? error.message : 'Could not publish',
       });
     }
   }
@@ -283,6 +308,34 @@ export function Browser() {
             </button>
           </form>
         </div>
+        <form className="publish" onSubmit={(event) => void onPublish(event)}>
+          <label className="address-label" htmlFor="draft-address">
+            New address
+          </label>
+          <input
+            id="draft-address"
+            className="search"
+            value={draftAddress}
+            onChange={(event) => setDraftAddress(event.target.value)}
+            placeholder="note.zz"
+            autoComplete="off"
+            spellCheck={false}
+          />
+          <label className="address-label" htmlFor="draft-html">
+            HTML
+          </label>
+          <textarea
+            id="draft-html"
+            className="draft"
+            value={draftHtml}
+            onChange={(event) => setDraftHtml(event.target.value)}
+            placeholder='<h1>My page</h1><p>Hello from the small web.</p>'
+            spellCheck={false}
+          />
+          <button className="go" type="submit">
+            Publish
+          </button>
+        </form>
 
         <section className="page">
           {shown.kind === 'idle' && (

@@ -55,6 +55,26 @@ export async function fetchSite(
   return { page, missing: false };
 }
 
+export async function publishSite(input: {
+  personId: string;
+  address: string;
+  body: string;
+}): Promise<SitePage> {
+  const response = await fetch(`${API_URL}/sites`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  if (!response.ok) {
+    throw new Error(
+      response.status === 409
+        ? 'That address is already taken'
+        : 'Could not publish',
+    );
+  }
+  return (await response.json()) as SitePage;
+}
+
 export async function fetchSearch(q: string): Promise<SearchHit[]> {
   const response = await fetch(
     `${API_URL}/sites?q=${encodeURIComponent(q)}`,

@@ -1,6 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Person } from '../people/person.schema.js';
 import { Site } from './site.schema.js';
 
@@ -18,6 +23,15 @@ export type SearchHit = {
 
 function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function titleFromHtml(body: string, address: string): string {
+  const match = body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+  if (!match) {
+    return address;
+  }
+  const title = match[1].replace(/<[^>]+>/g, '').trim();
+  return title || address;
 }
 
 @Injectable()
@@ -68,5 +82,34 @@ export class SitesService {
       address: row.address,
       title: row.title,
     }));
+  }
+
+  async publish(input: {
+    personId: string;
+    address: string;
+    body: string;
+  }): Promise<SitePage> {
+    const address = input.address.trim().toLowerCase();
+    const body = input.body;
+    if (!address) {
+      throw new BadRequestException('Address is required');
+    }
+    if (!body.trim()) {
+      throw new BadRequestException('HTML is required');
+    }
+
+    const taken = await this.sites.exists({ address });
+    if (taken) {
+      throw new ConflictException(`Address already taken: ${address}`);
+    }
+
+    await this.sites.create({
+      address,
+      title: titleFromHtml(body, address),
+      body,
+      author: new Types.ObjectId(input.personId),
+    });
+
+    return this.findByAddress(address);
   }
 }

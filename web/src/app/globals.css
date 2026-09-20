@@ -154,6 +154,29 @@ body {
   cursor: pointer;
 }
 
+.publish {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  flex-wrap: wrap;
+}
+
+.draft {
+  flex: 1;
+  min-width: 180px;
+  min-height: 40px;
+  max-height: 88px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: Consolas, "Courier New", monospace;
+  resize: vertical;
+}
+
 .page {
   flex: 1;
   display: flex;
