@@ -242,7 +242,7 @@ export function Browser() {
     <div className="shell">
       <div className="browser">
         <div className="chrome">
-          <form className="chrome-row" onSubmit={onSubmit}>
+          <form className="chrome-row chrome-go" onSubmit={onSubmit}>
             <label className="address-label" htmlFor="person">
               Browsing as
             </label>
@@ -274,23 +274,25 @@ export function Browser() {
             >
               Forward
             </button>
-            <label className="address-label" htmlFor="address">
-              Address
-            </label>
-            <input
-              id="address"
-              className="address"
-              value={typed}
-              onChange={(event) => setTyped(event.target.value)}
-              placeholder="tidepool.zz"
-              autoComplete="off"
-              spellCheck={false}
-            />
-            <button className="go" type="submit">
-              Go
-            </button>
+            <div className="address-group">
+              <label className="address-label" htmlFor="address">
+                Address
+              </label>
+              <input
+                id="address"
+                className="address"
+                value={typed}
+                onChange={(event) => setTyped(event.target.value)}
+                placeholder="tidepool.zz"
+                autoComplete="off"
+                spellCheck={false}
+              />
+              <button className="go" type="submit">
+                Go
+              </button>
+            </div>
           </form>
-          <form className="chrome-row" onSubmit={(event) => void onSearch(event)}>
+          <form className="chrome-row chrome-search" onSubmit={(event) => void onSearch(event)}>
             <label className="address-label" htmlFor="search">
               Search
             </label>
